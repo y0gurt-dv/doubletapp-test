@@ -42,19 +42,3 @@ class DeletePetsSerializer(serializers.Serializer):
     ids = serializers.ListField(
         child=serializers.UUIDField()
     )
-
-
-class PetsForExportSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
-
-    def get_photos(self, obj: Pet):
-        photos = obj.photos.all()
-        host = settings.ALLOWED_HOSTS[0]
-        return [
-            'https://{host}{url}'.format(host=host, url=photo.file.url)
-            for photo in photos
-        ]
-
-    class Meta:
-        model = Pet
-        fields = '__all__'
